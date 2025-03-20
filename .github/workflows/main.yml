@@ -3,7 +3,7 @@ name: widget-server pipe ECR
 on:
   push:
     branches:
-      - 'master'
+      - "master"
 
 jobs:
   Build:
@@ -69,11 +69,11 @@ jobs:
         id: run-trivy-scanner
         uses: aquasecurity/trivy-action@0.29.0
         with:
-          image-ref: '${{steps.login-ecr.outputs.registry}}/${{ vars.ECR_REPOSITORY }}:test'
-          format: 'table'
+          image-ref: "${{steps.login-ecr.outputs.registry}}/${{ vars.ECR_REPOSITORY }}:test"
+          format: "table"
           ignore-unfixed: true
-          vuln-type: 'os,library'
-          severity: 'CRITICAL,HIGH,MEDIUM,LOW'
+          vuln-type: "os,library"
+          severity: "CRITICAL,HIGH,MEDIUM,LOW"
 
       - name: Build and push the image to AWS ECR
         id: build-and-push-image-to-aws-ecr
@@ -84,6 +84,18 @@ jobs:
           cache-from: type=gha
           tags: |
             ${{steps.login-ecr.outputs.registry}}/${{ vars.ECR_REPOSITORY }}:${{ steps.generate-tag.outputs.sha }}
+
+      - name: Deploy to App Runner
+        id: deploy-app-runner
+        uses: awslabs/amazon-app-runner-deploy@main
+        with:
+          service: widget-server
+          image: |
+            ${{steps.login-ecr.outputs.registry}}/${{ vars.ECR_REPOSITORY }}:${{ steps.generate-tag.outputs.sha }}
+          region: ${{ vars.AWS_REGION }}
+          cpu: 1
+          memory: 2
+          port: 3333
 
       # - name: Build and push the image to AWS ECR
       #   id: build-push-image
