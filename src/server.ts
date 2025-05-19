@@ -3,11 +3,12 @@ import { fastifyMultipart } from "@fastify/multipart";
 import { fastify } from "fastify";
 import { healthCheckRoute } from "./routes/health-check";
 import { uploadImageRoute } from "./routes/upload-image";
+import { log } from "./infra/logger";
 
 const server = fastify();
 
 server.register(fastifyCors, {
-	origin: "*",
+  origin: "*",
 });
 
 server.register(fastifyMultipart);
@@ -15,5 +16,5 @@ server.register(uploadImageRoute);
 server.register(healthCheckRoute);
 
 server.listen({ port: 3333, host: "0.0.0.0" }).then(() => {
-	console.log("HTTP server running!");
+  log.info("HTTP server running!");
 });
