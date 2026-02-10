@@ -1,20 +1,40 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
 
 metadata:
   name: widget-server-deployment
   namespace: widget
 
 spec:
-  replicas: 3
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxSurge: 20%
-      maxUnavailable: 10%
+  replicas: 10
+  revisionHistoryLimit: 5
+  # strategy:
+  #   type: RollingUpdate
+  #   rollingUpdate:
+  #     maxSurge: 20%
+  #     maxUnavailable: 10%
   selector:
     matchLabels:
       app: widget-server
+  strategy:
+    # blueGreen:
+    #   activeService: widget-server-svc
+    #   previewService: widget-server-svc-preview
+    #   autoPromotionEnabled: false
+    canary:
+      stableService: widget-server-svc
+      canaryService: widget-server-svc-preview
+      steps:
+        - setWeight: 20
+        - pause: {}
+        - setWeight: 40
+        - pause: { duration: 30s }
+        - setWeight: 60
+        - pause: { duration: 20s }
+        - setWeight: 80
+        - pause: { duration: 10s }
+        - setWeight: 90
+        - pause: {}
   template:
     metadata:
       labels:

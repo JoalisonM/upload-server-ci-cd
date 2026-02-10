@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+
+metadata:
+  name: widget-server-cm
+  namespace: widget
+
+data:
+  CLOUDFLARE_BUCKET: "#"
+  CLOUDFLARE_PUBLIC_URL: "http://localhost"
+  NEW_RELIC_APP_NAME: "widget-server"
+  SECRET_API_ENDPOINT: "#"
+  SECRET_API_VERSION: "#"
+  SECRET_API_TOKEN: "#"

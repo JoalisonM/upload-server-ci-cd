@@ -4,7 +4,7 @@ services:
     container_name: postgres
     restart: unless-stopped
     ports:
-     - $POSTGRES_PORT:$POSTGRES_PORT
+      - $POSTGRES_PORT:$POSTGRES_PORT
     environment:
       - POSTGRES_USER=$POSTGRES_USER
       - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
@@ -29,6 +29,9 @@ services:
       - CLOUDFLARE_BUCKET=$CLOUDFLARE_BUCKET
       - CLOUDFLARE_ACCOUNT_ID=$CLOUDFLARE_ACCOUNT_ID
       - CLOUDFLARE_PUBLIC_URL=$CLOUDFLARE_PUBLIC_URL
+      - SECRET_API_VERSION=$SECRET_API_VERSION
+      - SECRET_API_ENDPOINT=$SECRET_API_ENDPOINT
+      - SECRET_API_TOKEN=$SECRET_API_TOKEN
     networks:
       - widget
 
